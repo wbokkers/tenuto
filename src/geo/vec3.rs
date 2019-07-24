@@ -135,6 +135,23 @@ impl ops::Div<f64> for Vector3
     }
 }
 
+// Index operator
+impl ops::Index<usize> for Vector3
+{
+    type Output = f64;
+    
+    fn index(&self, idx: usize) -> &f64
+    {
+        match idx
+        {
+            0 => &self.x,
+            1 => &self.y,
+            2 => &self.z,
+            _ => panic!("Vector3 index out of range (possible values: 0, 1, 2)")
+        }
+    }
+}
+
 impl Vector3
 {
     /// Returns a vector with 0 length
@@ -142,6 +159,31 @@ impl Vector3
     pub fn empty() -> Vector3
     {
         Vector3 { x:0.0, y:0.0, z:0.0 }
+    }
+
+    pub fn dot_procuct(self, v: Vector3) -> f64
+    {
+        self.x*v.x + self.y*v.y + self.z * v.z
+    }
+
+    pub fn out_product(self, v:Vector3) -> Vector3
+    {
+        Vector3 {
+             x: self.y * v.z - self.z * v.y,
+             y: self.z * v.x - self.x * v.z,
+             z: self.x * v.y - self.y * v.x 
+        }
+    }
+
+    pub fn normalized(self) -> Vector3
+    {
+        let mut magnitude = self.length();
+        if magnitude < 1e-24 // close to 0
+        {
+            magnitude = 1e-24
+        }
+
+        Vector3 { x: self.x / magnitude, y: self.y / magnitude, z: self.z / magnitude }
     }
 
     // TODO: When Matrix3 is implemented

@@ -153,4 +153,17 @@ mod tests {
         assert_eq!(p.azimuth, 0.0);
         assert_eq!(p.elevation as f32, 45f64.to_radians() as f32);
      }
+
+        #[test]
+    fn vector3_index() {
+        let v = Vector3 { x:1.0, y:2.1, z:3.2 };
+
+        let vx = v[0];
+        let vy = v[1];
+        let vz = v[2];
+
+        assert_eq!(vx, 1.0);
+        assert_eq!(vy, 2.1); 
+        assert_eq!(vz, 3.2);
+      }
 }
