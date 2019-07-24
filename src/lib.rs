@@ -85,9 +85,9 @@ mod tests {
         let p2 = Vector3 { x:1.0, y:3.0, z:4.0 };
 
         assert_eq!(p1.distance_to(p2), 5.0);
-     }
+    }
 
-     #[test]
+    #[test]
     fn vector3_multiply_float_with_vector() {
         let v = Vector3 { x:1.0, y:2.0, z:3.0 };
         let f = 3.0;
@@ -96,7 +96,7 @@ mod tests {
         assert_eq!(m.x, 3.0);
         assert_eq!(m.y, 6.0);
         assert_eq!(m.z, 9.0);
-     }
+    }
 
     #[test]
     fn vector3_multiply_vector_with_float() {
@@ -107,7 +107,7 @@ mod tests {
         assert_eq!(m.x, 3.0);
         assert_eq!(m.y, 6.0);
         assert_eq!(m.z, 9.0);
-     }
+    }
 
     #[test]
     fn vector3_divide_by_float() {
@@ -118,9 +118,9 @@ mod tests {
         assert_eq!(m.x, 0.5);
         assert_eq!(m.y, 1.0);
         assert_eq!(m.z, 1.5);
-     }
+    }
 
-      #[test]
+    #[test]
     fn vector3_divide_by_zero() {
         let v = Vector3 { x:1.0, y:2.0, z:3.0 };
         let f = 0.0;
@@ -129,7 +129,7 @@ mod tests {
         assert_eq!(m.x, std::f64::INFINITY);
         assert_eq!(m.y, std::f64::INFINITY);
         assert_eq!(m.z, std::f64::INFINITY);
-     }
+    }
 
     #[test]
     fn vector3_to_polar1() {
@@ -140,9 +140,9 @@ mod tests {
         assert_eq!(p.magnitude, 2f64.sqrt());
         assert_eq!(p.azimuth, 45f64.to_radians());
         assert_eq!(p.elevation, 0.0);
-     }
+    }
 
-   #[test]
+    #[test]
     fn vector3_to_polar2() {
         let v = Vector3 { x:1.0, y:0.0, z:1.0 };
 
@@ -152,9 +152,9 @@ mod tests {
         assert_eq!(p.magnitude as f32, 2f64.sqrt() as f32);
         assert_eq!(p.azimuth, 0.0);
         assert_eq!(p.elevation as f32, 45f64.to_radians() as f32);
-     }
+    }
 
-        #[test]
+    #[test]
     fn vector3_index() {
         let v = Vector3 { x:1.0, y:2.1, z:3.2 };
 
@@ -165,5 +165,5 @@ mod tests {
         assert_eq!(vx, 1.0);
         assert_eq!(vy, 2.1); 
         assert_eq!(vz, 3.2);
-      }
+    }
 }
