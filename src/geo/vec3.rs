@@ -15,9 +15,9 @@ pub struct Vector3
 #[derive(Copy, Clone)]
 pub struct PolarCoordinates
 {
-    /// Azimuth angle (Rad)
+    /// Azimuth angle (Rad), when positive x-axis is defined as NORTH 
     pub azimuth: f64,
-    /// Elevation angle (Rad)
+    /// Elevation angle (Rad), where up is postive and down is negative
     pub elevation: f64,
     pub magnitude: f64,
 }
@@ -37,7 +37,8 @@ impl PolarCoordinates
        
         if (v.x).abs() < 0.000001 // vector on y-z plane:
         {
-            // vector on y-z plane: azimuth is either up or down or undirected
+            // vector on y-z plane: azimuth is either left (positive y) 
+            // or right (negative y) or undirected
             azimuth = if v.y > 0.0 {
                 0.5 * consts::PI // 90 deg
             } else if v.y < 0.0 {
