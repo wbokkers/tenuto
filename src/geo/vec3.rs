@@ -54,8 +54,8 @@ impl PolarCoordinates
             // assume that the x-axis is the NORTH direction
             azimuth = (v.y / v.x).atan();
 
-            // if x-direction is negative, we need the
-            // angle to the positive x-direction
+            // we need the angle to the positive x-axis
+            // and not to the negative x-axis.
             if v.x < 0.0 {
                azimuth = azimuth + consts::PI;
             }
