@@ -194,6 +194,9 @@ fn matrix2_inverse()
         2.0,-1.0,3.0,
         1.0, 1.0, 4.0);
 
+    // Assert not singular
+    assert!(m.is_singular() == false);
+ 
     // Act
     let inv = m.inverse().unwrap();
     
@@ -220,27 +223,18 @@ fn matrix2_inverse_singular()
         3.0,-2.0,1.0,
         3.0, 2.0, -1.0);
 
-    // Act
+    // Act (ask for singularity)
+    let is_singular = m.is_singular();
+
+    // Assert singularity
+    assert!(is_singular);
+
+    // Act (try to do the inverse )
     let res = m.inverse();
    
     // Assert
     assert!(res.is_err())
 }
 
-#[test]
-fn divide_by_zero_tol()
-{
 
-    let almost_0 = 1e-309_f64;// std::f64::MIN_POSITIVE;
-
-    let inf = 1.0/almost_0;
-  
-    assert!(0.0 < almost_0);
-    assert!(inf == std::f64::INFINITY);
-    // let div = 1.0/almost_0;
-
-    // assert!(div != std::f64::INFINITY);
-    // assert!(div != std::f64::NAN);
-    // assert!(div != std::f64::NEG_INFINITY);
-}
 
