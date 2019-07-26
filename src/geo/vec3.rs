@@ -1,29 +1,36 @@
 use std::ops;
 use std::f64::consts;
 
+use super::Matrix3;
+
 /// A vector or point in 3D-space.
 /// Some method only make sense for points, others only for vectors,
 /// but there's no point (pun intended) in maintaining separate types for vectors and points. 
 #[derive(Copy, Clone)]
 pub struct Vector3
 {
-    pub x : f64, // x-direction or location
-    pub y : f64, // y-direction or location
-    pub z : f64  // z-direction or location
+    /// x-direction or position
+    pub x : f64, 
+    /// y-direction or position
+    pub y : f64, 
+    /// z-direction or position
+    pub z : f64  
 }
 
 #[derive(Copy, Clone)]
 pub struct PolarCoordinates
 {
-    /// Azimuth angle (Rad), when positive x-axis is defined as NORTH 
+    /// Azimuth angle (Rad) of a vector. Positive x-axis is defined as NORTH. 
     pub azimuth: f64,
-    /// Elevation angle (Rad), where up is postive and down is negative
+    /// Elevation angle (Rad) of a vector. Up is postive and down is negative.
     pub elevation: f64,
+    /// Length of a vector.
     pub magnitude: f64,
 }
 
 impl PolarCoordinates
 {
+    /// Gets polar coordinates of a 3D-vector.
     pub fn from_vector(v: Vector3) -> PolarCoordinates
     {
         let length = v.length();
@@ -72,7 +79,7 @@ impl PolarCoordinates
     }
 }
 
-// Subtract operation
+/// Subtract two 3D-vectors.
 impl ops::Sub<Vector3> for Vector3
 {
     type Output = Vector3;
@@ -87,7 +94,7 @@ impl ops::Sub<Vector3> for Vector3
     }
 }
 
-// Add operation
+/// Adds two 3D-vectors.
 impl ops::Add<Vector3> for Vector3
 {
     type Output = Vector3;
@@ -102,7 +109,7 @@ impl ops::Add<Vector3> for Vector3
     }
 }
 
-// Multiply float with Vector3
+/// Multiplies a scalar with a 3D-vector.
 impl ops::Mul<Vector3> for f64
 {
     type Output = Vector3;
@@ -113,7 +120,7 @@ impl ops::Mul<Vector3> for f64
     }
 }
 
-// Multiply Vector3 with float
+/// Multiplies a 3D-vector with a scalar.
 impl ops::Mul<f64> for Vector3
 {
     type Output = Vector3;
@@ -124,7 +131,8 @@ impl ops::Mul<f64> for Vector3
     }
 }
 
-// Divide Vector3 with float
+
+/// Divides a 3D-vector by a scalar.
 impl ops::Div<f64> for Vector3
 {
     type Output = Vector3;
@@ -135,11 +143,15 @@ impl ops::Div<f64> for Vector3
     }
 }
 
-// Index operator
+/// Indexes into a vector.
 impl ops::Index<usize> for Vector3
 {
     type Output = f64;
     
+    /// The x-value is at index 0,
+    /// The y-value is at index 1,
+    /// The z-value is at index 2.  
+    /// Panics when the index is not in the range 0...2.
     fn index(&self, idx: usize) -> &f64
     {
         match idx
@@ -152,20 +164,31 @@ impl ops::Index<usize> for Vector3
     }
 }
 
+
 impl Vector3
 {
-    /// Returns a vector with 0 length
+    /// Creates a vector with 0 length.
     /// Or a point located at the origin.
     pub fn empty() -> Vector3
     {
         Vector3 { x:0.0, y:0.0, z:0.0 }
     }
 
+    /// Creates a vector from polar coordinates.
+    pub fn from_polar(p: PolarCoordinates) -> Vector3
+    {
+        let rot = Matrix3::rotation_noroll(p.azimuth, p.elevation);
+        let hor_vector = Vector3 { x: p.magnitude, y: 0.0, z: 0.0 };
+        rot * hor_vector
+    }
+
+    /// Returns the dot-product of two vectors.
     pub fn dot_procuct(self, v: Vector3) -> f64
     {
         self.x*v.x + self.y*v.y + self.z * v.z
     }
 
+    /// Returns the out-product of two vectors.
     pub fn out_product(self, v:Vector3) -> Vector3
     {
         Vector3 {
@@ -175,6 +198,8 @@ impl Vector3
         }
     }
 
+    /// Normalizes this vector and returns it.
+    /// A normalized vector is a vector with length 1.
     pub fn normalized(self) -> Vector3
     {
         let mut magnitude = self.length();
@@ -186,45 +211,21 @@ impl Vector3
         Vector3 { x: self.x / magnitude, y: self.y / magnitude, z: self.z / magnitude }
     }
 
-    // TODO: When Matrix3 is implemented
-    // pub fn from_polar(p: PolarCoordinates) -> Vector3
-    // {
-    //         let rot: Matrix3 = Matrix3::rotation(p.azimuth, p.elevation);
-    //         let hor_vector = Vector3 { x: p.magnitude, y: 0.0, z: 0.0 };
-    //         rot * vector
-    // }
-
-       // TODO: When Matrix3 is implemented:
-        /// <summary>
-        /// Multiply a 3x3 matrix with a column-vector
-        /// </summary>
-        /// <param name="m">A 3x3 matrix</param>
-        /// <param name="v">A column vector with length=3</param>
-        /// <returns>A column vector</returns>
-        // public static Vector3 operator *(Matrix3 m, Vector3 v)
-        // {
-        //     return new Vector3(
-        //         m.M11 * v._x + m.M12 * v._y + m.M13 * v._z,
-        //         m.M21 * v._x + m.M22 * v._y + m.M23 * v._z,
-        //         m.M31 * v._x + m.M32 * v._y + m.M33 * v._z
-        //         );
-        // }
-
-    /// Returns the magnitude of this vector
-    /// Or the distance from the origin to this point 
+    /// Returns the magnitude of this vector.  
+    /// Or the distance from the origin to this point.
     pub fn length(self) -> f64
     {
        (self.x*self.x + self.y*self.y + self.z*self.z).sqrt()
     }
 
-    /// Returns the squared length of this vector
-    /// Or the squared distance from the origin to this point
+    /// Returns the squared length of this vector.  
+    /// Or the squared distance from the origin to this point.
     pub fn length_squared(self) -> f64
     {
         self.x*self.x + self.y*self.y + self.z*self.z
     }
 
-    /// Returns the distance from this point to another point
+    /// Returns the distance from this point to another point.
     pub fn distance_to(self, p: Vector3) -> f64
     {
         let vrel = p - self;
